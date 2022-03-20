@@ -46,8 +46,8 @@ class KelasController extends Controller
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'title'   => 'required',
-            'content' => 'required',
+            'nama_kelas'   => 'required',
+            'jurusan_id' => 'required',
         ]);
 
         //response error validation

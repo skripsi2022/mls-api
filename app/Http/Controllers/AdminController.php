@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mapel;
+use App\Models\Admin;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-class MapelController extends Controller
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,14 +17,14 @@ class MapelController extends Controller
      */
     public function index()
     {
-        //get data from table Mapel
-        $mapel = Mapel::latest()->get();
+        //get data from table admin
+        $admin = Admin::latest()->get();
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'List Data Kelas',
-            'data'    => $mapel
+            'message' => 'List Data Admin',
+            'data'    => $admin
         ], 200);
     }
 
@@ -48,8 +48,8 @@ class MapelController extends Controller
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_mapel'   => 'required',
-            'guru_id' => 'required',
+            'nama_admin'   => 'required',
+            'user_id' => 'required',
         ]);
 
         //response error validation
@@ -58,25 +58,23 @@ class MapelController extends Controller
         }
 
         //save to database
-        $mapel = Mapel::create([
-            'nama_mapel'     => $request->nama_mapel,
-            'guru_id'   => $request->guru_id
+        $admin = Admin::create([
+            'nama_admin'     => $request->nama_admin,
+            'user_id'   => $request->user_id,
         ]);
 
-        //success save to database
-        if ($mapel) {
-
+        if ($admin) {
             return response()->json([
                 'success' => true,
-                'message' => 'Mapel Created',
-                'data'    => $mapel
+                'message' => 'Admin Created',
+                'data'    => $admin
             ], 201);
         }
 
         //failed save to database
         return response()->json([
             'success' => false,
-            'message' => 'Kelas Failed to Save',
+            'message' => 'Admin Failed to Save',
         ], 409);
     }
 
@@ -88,14 +86,14 @@ class MapelController extends Controller
      */
     public function show($id)
     {
-        //find mapel by ID
-        $mapel = Mapel::findOrfail($id);
+        //find admin by ID
+        $admin = Admin::findOrfail($id);
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Mapel',
-            'data'    => $mapel
+            'message' => 'Detail Data Admin',
+            'data'    => $admin
         ], 200);
     }
 
@@ -117,12 +115,12 @@ class MapelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mapel $mapel)
+    public function update(Request $request, Admin $admin)
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_kelas'   => 'required',
-            'jurusan_id'   => 'required',
+            'nama_admin'   => 'required',
+            'user_id' => 'required',
         ]);
 
         //response error validation
@@ -130,23 +128,29 @@ class MapelController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        //find mapel by ID
-        $mapel = Mapel::findOrFail($mapel->id);
+        //find admin by ID
+        $admin = Admin::findOrFail($admin->id);
 
-        if ($mapel) {
+        if ($admin) {
 
-            //update kelas
-            $mapel->update([
-                'nama_kelas'     => $request->nama_mapel,
-                'guru_id'     => $request->guru_id,
+            // Update Ujian
+            $admin->update([
+                'nama_admin'     => $request->nama_admin,
+                'user_id'       => $request->user_id,
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'mapel Updated',
-                'data'    => $mapel
+                'message' => 'admin Updated',
+                'data'    => $admin
             ], 200);
         }
+
+        //data admin not found
+        return response()->json([
+            'success' => false,
+            'message' => 'Admin Not Found',
+        ], 404);
     }
 
     /**
@@ -157,10 +161,10 @@ class MapelController extends Controller
      */
     public function destroy($id)
     {
-        $mapel = Mapel::findOrFail($id);
+        $admin = Admin::findOrFail($id);
 
         try {
-            $mapel->delete();
+            $admin->delete();
             $response = [
                 'message' => 'Nilai Deleted'
             ];

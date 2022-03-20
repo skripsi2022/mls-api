@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mapel;
+use App\Models\Nilai;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-class MapelController extends Controller
+class NilaiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,14 +17,14 @@ class MapelController extends Controller
      */
     public function index()
     {
-        //get data from table Mapel
-        $mapel = Mapel::latest()->get();
+        //get data from table nilai
+        $nilai = Nilai::latest()->get();
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'List Data Kelas',
-            'data'    => $mapel
+            'message' => 'List Data Nilai',
+            'data'    => $nilai
         ], 200);
     }
 
@@ -48,8 +48,9 @@ class MapelController extends Controller
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_mapel'   => 'required',
-            'guru_id' => 'required',
+            'siswa_id'   => 'required',
+            'mapel_id' => 'required',
+            'nilai' => 'required',
         ]);
 
         //response error validation
@@ -58,25 +59,24 @@ class MapelController extends Controller
         }
 
         //save to database
-        $mapel = Mapel::create([
-            'nama_mapel'     => $request->nama_mapel,
-            'guru_id'   => $request->guru_id
+        $nilai = Nilai::create([
+            'siswa_id'     => $request->siswa_id,
+            'mapel_id'   => $request->mapel_id,
+            'nilai'   => $request->nilai
         ]);
 
-        //success save to database
-        if ($mapel) {
-
+        if ($nilai) {
             return response()->json([
                 'success' => true,
-                'message' => 'Mapel Created',
-                'data'    => $mapel
+                'message' => 'Kelas Created',
+                'data'    => $nilai
             ], 201);
         }
 
         //failed save to database
         return response()->json([
             'success' => false,
-            'message' => 'Kelas Failed to Save',
+            'message' => 'Nilai Failed to Save',
         ], 409);
     }
 
@@ -88,14 +88,14 @@ class MapelController extends Controller
      */
     public function show($id)
     {
-        //find mapel by ID
-        $mapel = Mapel::findOrfail($id);
+        //find nilai by ID
+        $nilai = Nilai::findOrfail($id);
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Mapel',
-            'data'    => $mapel
+            'message' => 'Detail Data Nilai',
+            'data'    => $nilai
         ], 200);
     }
 
@@ -117,12 +117,13 @@ class MapelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mapel $mapel)
+    public function update(Request $request, Nilai $nilai)
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_kelas'   => 'required',
-            'jurusan_id'   => 'required',
+            'siswa_id'   => 'required',
+            'mapel_id' => 'required',
+            'nilai' => 'required',
         ]);
 
         //response error validation
@@ -130,23 +131,30 @@ class MapelController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        //find mapel by ID
-        $mapel = Mapel::findOrFail($mapel->id);
+        //find nilai by ID
+        $ujian = Nilai::findOrFail($nilai->id);
 
-        if ($mapel) {
+        if ($nilai) {
 
-            //update kelas
-            $mapel->update([
-                'nama_kelas'     => $request->nama_mapel,
-                'guru_id'     => $request->guru_id,
+            // Update Ujian
+            $nilai->update([
+                'siswa_id'     => $request->siswa_id,
+                'mapel_id'   => $request->mapel_id,
+                'nilai'   => $request->nilai
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'mapel Updated',
-                'data'    => $mapel
+                'message' => 'kelas Updated',
+                'data'    => $nilai
             ], 200);
         }
+
+        //data nilai not found
+        return response()->json([
+            'success' => false,
+            'message' => 'Nilai Not Found',
+        ], 404);
     }
 
     /**
@@ -157,10 +165,10 @@ class MapelController extends Controller
      */
     public function destroy($id)
     {
-        $mapel = Mapel::findOrFail($id);
+        $nilai = Nilai::findOrFail($id);
 
         try {
-            $mapel->delete();
+            $nilai->delete();
             $response = [
                 'message' => 'Nilai Deleted'
             ];

@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Guru;
-use Illuminate\Database\QueryException;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\Response;
 
-class GuruController extends Controller
+class SiswaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,14 +15,14 @@ class GuruController extends Controller
      */
     public function index()
     {
-        //get data from table guru
-        $guru = Guru::latest()->get();
+        //get data from table siswa
+        $siswa = Siswa::latest()->get();
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'List Data Guru',
-            'data'    => $guru
+            'message' => 'List Data Siswa',
+            'data'    => $siswa
         ], 200);
     }
 
@@ -48,10 +46,12 @@ class GuruController extends Controller
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_guru'   => 'required',
+            'nama_siswa'   => 'required',
             'user_id' => 'required',
-            'alamat_guru' => 'required',
-            'notelp_guru' => 'required'            
+            'kelas_id' => 'required',
+            'nama_siswa' => 'required',
+            'nis_siswa' => 'required',
+            'alamat_siswa' => 'required',
         ]);
 
         //response error validation
@@ -59,27 +59,30 @@ class GuruController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        //save to database
-        $ujian = Guru::create([
-            'nama_guru'     => $request->nama_guru,
-            'user_id'   => $request->user_id,
-            'alamat_guru'   => $request->alamat_guru,
-            'notelp_guru'   => $request->notelp_guru
+        $siswa = Siswa::create([
+            'nama_siswa'   => $request->nama_siswa,
+            'user_id' => $request->user_id,
+            'kelas_id' => $request->kelas_id,
+            'nama_siswa' => $request->nama_siswa,
+            'nis_siswa' => $request->nis_siswa,
+            'alamat_siswa' => $request->alamat_siswa,
         ]);
 
-        if ($ujian) {
+        if($siswa){
+
             return response()->json([
                 'success' => true,
-                'message' => 'Guru Created',
-                'data'    => $ujian
+                'message' => 'Kelas Created',
+                'data'    => $siswa
             ], 201);
         }
 
         //failed save to database
         return response()->json([
             'success' => false,
-            'message' => 'Guru Failed to Save',
+            'message' => 'Kelas Failed to Save',
         ], 409);
+
     }
 
     /**
@@ -90,14 +93,14 @@ class GuruController extends Controller
      */
     public function show($id)
     {
-        //find guru by ID
-        $guru = Guru::findOrfail($id);
+        //find siswa by ID
+        $siswa = Siswa::findOrfail($id);
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Guru',
-            'data'    => $guru
+            'message' => 'Detail Data Siswa',
+            'data'    => $siswa
         ], 200);
     }
 
@@ -109,7 +112,7 @@ class GuruController extends Controller
      */
     public function edit($id)
     {
-        
+        //
     }
 
     /**
@@ -119,48 +122,45 @@ class GuruController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Guru $guru)
+    public function update(Request $request, Siswa $siswa)
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_guru'   => 'required',
+            'nama_siswa'   => 'required',
             'user_id' => 'required',
-            'alamat_guru' => 'required',
-            'notelp_guru' => 'required'
+            'kelas_id' => 'required',
+            'nama_siswa' => 'required',
+            'nis_siswa' => 'required',
+            'alamat_siswa' => 'required',
         ]);
 
-        //response error validation
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
-        }
+        //find siswa by ID
+        $siswa = Siswa::findOrFail($siswa->id);
 
-        //find guru by ID
-        $guru = Guru::findOrFail($guru->id);
+        if($siswa){
+            // update siswa
 
-        if ($guru) {
-
-            // Update Ujian
-            $guru->update([
-                'nama_guru'     => $request->nama_guru,
-                'user_id'       => $request->user_id,
-                'alamat_guru'   => $request->alamat_guru,
-                'notelp_guru'   => $request->notelp_guru
+            $siswa->update([
+                'nama_siswa'   => $request->nama_siswa,
+                'user_id' => $request->user_id,
+                'kelas_id' => $request->kelas_id,
+                'nama_siswa' => $request->nama_siswa,
+                'nis_siswa' => $request->nis_siswa,
+                'alamat_siswa' => $request->alamat_siswa,
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'guru Updated',
-                'data'    => $guru
+                'message' => 'siswa Updated',
+                'data'    => $siswa
             ], 200);
         }
 
-        //data guru not found
+        //data siswa not found
         return response()->json([
             'success' => false,
-            'message' => 'Guru Not Found',
+            'message' => 'kelas Not Found',
         ], 404);
-
-
     }
 
     /**
@@ -171,20 +171,26 @@ class GuruController extends Controller
      */
     public function destroy($id)
     {
-        $guru = Guru::findOrFail($id);
+        //find siswa by ID
+        $siswa = Siswa::findOrFail($id);
 
-        try {
-            $guru->delete();
-            $response = [
-                'message' => 'Nilai Deleted'
-            ];
+        if($siswa){
 
-            return response()->json($response, Response::HTTP_OK);
-        } catch (QueryException $e) {
+            //delete Siswa
+            $siswa->delete();
 
             return response()->json([
-                'message' => "Failed " . $e->errorInfo
-            ]);
+                'success' => true,
+                'message' => 'Siswa Deleted',
+            ], 200);
+
         }
+
+        //data Siswa not found
+        return response()->json([
+            'success' => false,
+            'message' => 'Siswa Not Found',
+        ], 404);
+
     }
 }

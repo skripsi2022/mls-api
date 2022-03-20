@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Mapel;
+use App\Models\Ujian;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-class MapelController extends Controller
+class UjianController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,14 +17,14 @@ class MapelController extends Controller
      */
     public function index()
     {
-        //get data from table Mapel
-        $mapel = Mapel::latest()->get();
+        //get data from table ujian
+        $ujian = Ujian::latest()->get();
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'List Data Kelas',
-            'data'    => $mapel
+            'message' => 'List Data Ujian',
+            'data'    => $ujian
         ], 200);
     }
 
@@ -48,8 +48,9 @@ class MapelController extends Controller
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_mapel'   => 'required',
-            'guru_id' => 'required',
+            'mapel_id'   => 'required',
+            'kelas_id' => 'required',
+            'nama_ujian' => 'required',
         ]);
 
         //response error validation
@@ -58,25 +59,24 @@ class MapelController extends Controller
         }
 
         //save to database
-        $mapel = Mapel::create([
-            'nama_mapel'     => $request->nama_mapel,
-            'guru_id'   => $request->guru_id
+        $ujian = Ujian::create([
+            'mapel_id'     => $request->mapel_id,
+            'kelas_id'   => $request->kelas_id,
+            'nama_ujian'   => $request->nama_ujian
         ]);
 
-        //success save to database
-        if ($mapel) {
-
+        if($ujian) {
             return response()->json([
                 'success' => true,
-                'message' => 'Mapel Created',
-                'data'    => $mapel
+                'message' => 'Kelas Created',
+                'data'    => $ujian
             ], 201);
         }
 
         //failed save to database
         return response()->json([
             'success' => false,
-            'message' => 'Kelas Failed to Save',
+            'message' => 'Ujian Failed to Save',
         ], 409);
     }
 
@@ -88,14 +88,14 @@ class MapelController extends Controller
      */
     public function show($id)
     {
-        //find mapel by ID
-        $mapel = Mapel::findOrfail($id);
+        //find ujian by ID
+        $ujian = Ujian::findOrfail($id);
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Mapel',
-            'data'    => $mapel
+            'message' => 'Detail Data Ujian',
+            'data'    => $ujian
         ], 200);
     }
 
@@ -117,12 +117,13 @@ class MapelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mapel $mapel)
+    public function update(Request $request, Ujian $ujian)
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_kelas'   => 'required',
-            'jurusan_id'   => 'required',
+            'mapel_id'   => 'required',
+            'kelas_id' => 'required',
+            'nama_ujian' => 'required',
         ]);
 
         //response error validation
@@ -130,23 +131,30 @@ class MapelController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
-        //find mapel by ID
-        $mapel = Mapel::findOrFail($mapel->id);
+        //find ujian by ID
+        $ujian = Ujian::findOrFail($ujian->id);
 
-        if ($mapel) {
-
-            //update kelas
-            $mapel->update([
-                'nama_kelas'     => $request->nama_mapel,
-                'guru_id'     => $request->guru_id,
+        if($ujian){
+            
+            // Update Ujian
+            $ujian->update([
+                'mapel_id'     => $request->mapel_id,
+                'kelas_id'   => $request->kelas_id,
+                'nama_ujian'   => $request->nama_ujian
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'mapel Updated',
-                'data'    => $mapel
+                'message' => 'kelas Updated',
+                'data'    => $ujian
             ], 200);
         }
+
+        //data ujian not found
+        return response()->json([
+            'success' => false,
+            'message' => 'ujian Not Found',
+        ], 404);
     }
 
     /**
@@ -157,12 +165,12 @@ class MapelController extends Controller
      */
     public function destroy($id)
     {
-        $mapel = Mapel::findOrFail($id);
+        $ujian = Ujian::findOrFail($id);
 
         try {
-            $mapel->delete();
+            $ujian->delete();
             $response = [
-                'message' => 'Nilai Deleted'
+                'message' => 'Ujian Deleted'
             ];
 
             return response()->json($response, Response::HTTP_OK);
