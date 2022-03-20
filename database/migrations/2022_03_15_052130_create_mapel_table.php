@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKelasTable extends Migration
+class CreateMapelTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateKelasTable extends Migration
      */
     public function up()
     {
-        Schema::create('kelas', function (Blueprint $table) {
-            $table->increments('id_kelas');
-            $table->string('kelas');
-            $table->integer('jurusan_id')->unsigned();
+        Schema::create('mapel', function (Blueprint $table) {
+            $table->increments('id_mapel');
+            $table->integer('guru_id')->unsigned();;
+            $table->string('nama_mapel');
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
-            $table->foreign('jurusan_id')->references('id_jurusan')->on('jurusans');
+            $table->foreign('guru_id')->references('id_guru')->on('guru');
         });
     }
 
@@ -30,6 +30,6 @@ class CreateKelasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kelas');
+        Schema::dropIfExists('mapel');
     }
 }

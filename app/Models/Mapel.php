@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Jurusan extends Model
+class Mapel extends Model
 {
     use HasFactory;
+    protected $table = 'mapel';
+    protected $primaryKey = 'id_mapel';
+    protected $fillable = ['nama_mapel', 'guru_id'];
 
-    protected $table = 'jurusans';
-    protected $primaryKey = 'id_jurusan';
-    protected $fillable = ['nama_jurusan'];
 }
