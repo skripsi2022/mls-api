@@ -45,18 +45,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/profile', function (Request $request) {
         return auth()->user();
     });
-    
-    Route::resource('/jurusan', JurusanController::class);
-    Route::resource('/kelas', KelasController::class);
-    Route::resource('/mapel', MapelController::class);
-    Route::resource('/siswa', SiswaController::class);
-    Route::resource('/guru', GuruController::class);
-    Route::resource('/ujian', UjianController::class);
-    Route::resource('/soal', SoalController::class);
-    Route::resource('/nilai', NilaiController::class);
-    Route::resource('/admin', AdminController::class);
-    Route::resource('/soal', SoalController::class);
+
 
     // API route for logout user
     Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
 });
+
+Route::resource('/jurusan', JurusanController::class);
+Route::resource('/kelas', KelasController::class);
+Route::resource('/mapel', MapelController::class);
+Route::resource('/siswa', SiswaController::class);
+Route::resource('/guru', GuruController::class);
+Route::resource('/ujian', UjianController::class);
+Route::resource('/soal', SoalController::class);
+Route::resource('/nilai', NilaiController::class);
+Route::resource('/admin', AdminController::class);
+Route::resource('/soal', SoalController::class);
