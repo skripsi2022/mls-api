@@ -39,17 +39,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/register', [App\Http\Controllers\API\AuthController::class, 'register']);
 Route::post('/login', [App\Http\Controllers\API\AuthController::class, 'login']);
+Route::get('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
 //Protecting Routes
-Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/profile', function (Request $request) {
-        return auth()->user();
-    });
+// Route::group(['middleware' => ['auth:sanctum']], function () {
+//     Route::get('/profile', function (Request $request) {
+//         return auth()->user();
+//     });
 
 
-    // API route for logout user
-    Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
-});
+//     // API route for logout user
+//     Route::post('/logout', [App\Http\Controllers\API\AuthController::class, 'logout']);
+// });
 
 Route::resource('/jurusan', JurusanController::class);
 Route::resource('/kelas', KelasController::class);
