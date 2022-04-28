@@ -11,4 +11,9 @@ class Soal extends Model
     protected $table = 'soal';
     protected $primaryKey = 'id_soal';
     protected $fillable = ['ujian_id', 'isi_soal','opsi_a', 'opsi_b', 'opsi_c', 'opsi_d', 'opsi_benar'];
+
+    public function ujian()
+    {
+        return $this->belongsTo(Ujian::class, 'ujian_id', 'id_ujian');
+    }
 }

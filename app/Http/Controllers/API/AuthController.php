@@ -51,10 +51,10 @@ class AuthController extends Controller
         // return response()
         //     ->json(['message' => 'Hi ' . $user->name . ', welcome to home', 'access_token' => $token, 'token_type' => 'Bearer',]);
 
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        // $request->validate([
+        //     'email' => 'required|email',
+        //     'password' => 'required',
+        // ]);
 
         $user = User::where('email', $request->email)->first();
 
@@ -63,7 +63,7 @@ class AuthController extends Controller
             //     'success'   => false,
             //     'message' => ['These credentials do not match our records.']
             // ], 401);
-            return response()->json(['message' => 'These credentials do not match our records.'], 401);
+            return response()->json(['message' => 'Salah njeng !!!.'], 401);
         }
 
         $token = $user->createToken('ApiToken')->plainTextToken;
@@ -88,7 +88,7 @@ class AuthController extends Controller
         auth()->logout();
         
         return response()->json([
-            'success'    => true
+            'isok njrrr'    => true
         ], 200);
     }
 }

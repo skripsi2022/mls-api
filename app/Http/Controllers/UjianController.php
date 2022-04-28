@@ -18,7 +18,7 @@ class UjianController extends Controller
     public function index()
     {
         //get data from table ujian
-        $ujian = Ujian::latest()->get();
+        $ujian = Ujian::with('kelas','mapel')->latest()->get();
 
         //make response JSON
         return response()->json([
@@ -117,7 +117,7 @@ class UjianController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Ujian $ujian)
+    public function update(Request $request, $id)
     {
         //set validation
         $validator = Validator::make($request->all(), [
@@ -132,10 +132,9 @@ class UjianController extends Controller
         }
 
         //find ujian by ID
-        $ujian = Ujian::findOrFail($ujian->id);
+        $ujian = Ujian::findOrFail($id);
 
         if($ujian){
-            
             // Update Ujian
             $ujian->update([
                 'mapel_id'     => $request->mapel_id,

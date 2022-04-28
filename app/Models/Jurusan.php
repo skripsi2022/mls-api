@@ -12,4 +12,9 @@ class Jurusan extends Model
     protected $table = 'jurusans';
     protected $primaryKey = 'id_jurusan';
     protected $fillable = ['nama_jurusan'];
+
+    public function kelas()
+    {
+        return $this->hasMany(Kelas::class);
+    }
 }

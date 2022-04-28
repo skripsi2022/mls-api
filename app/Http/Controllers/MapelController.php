@@ -18,7 +18,7 @@ class MapelController extends Controller
     public function index()
     {
         //get data from table Mapel
-        $mapel = Mapel::latest()->get();
+        $mapel = Mapel::with('guru')->latest()->get();
 
         //make response JSON
         return response()->json([
@@ -117,35 +117,37 @@ class MapelController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mapel $mapel)
+    public function update(Request $request,$id)
     {
         //set validation
         $validator = Validator::make($request->all(), [
-            'nama_kelas'   => 'required',
-            'jurusan_id'   => 'required',
+            'nama_mapel'   => 'required',
+            'guru_id'   => 'required',
         ]);
 
         //response error validation
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
         //find mapel by ID
-        $mapel = Mapel::findOrFail($mapel->id);
+        $mapel = Mapel::findOrFail($id);
 
-        if ($mapel) {
+        try {
+            $mapel->update($request->all());
+            $response = [
+                'message' => 'Mapel Updated',
+                'data' => $mapel
+            ];
 
-            //update kelas
-            $mapel->update([
-                'nama_kelas'     => $request->nama_mapel,
-                'guru_id'     => $request->guru_id,
-            ]);
+            return response()->json($response,
+                Response::HTTP_OK
+            );
+        } catch (QueryException $e) {
 
             return response()->json([
-                'success' => true,
-                'message' => 'mapel Updated',
-                'data'    => $mapel
-            ], 200);
+                'message' => "Failed " . $e->errorInfo
+            ]);
         }
     }
 

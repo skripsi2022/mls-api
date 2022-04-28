@@ -16,7 +16,7 @@ class KelasController extends Controller
     public function index()
     {
         //get data from table kelass
-        $kelas = Kelas::latest()->get();
+        $kelas = Kelas::with('jurusan')->latest()->get();
 
         //make response JSON
         return response()->json([
@@ -115,7 +115,7 @@ class KelasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kelas $kelas)
+    public function update(Request $request, $id)
     {
         //set validation
         $validator = Validator::make($request->all(), [
@@ -129,7 +129,7 @@ class KelasController extends Controller
         }
 
         //find kelas by ID
-        $kelas = Kelas::findOrFail($kelas->id);
+        $kelas = Kelas::findOrFail($id);
 
         if ($kelas) {
 
@@ -182,4 +182,5 @@ class KelasController extends Controller
             'message' => 'Kelas Not Found',
         ], 404);
     }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Nilai;
+use App\Models\Siswa;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +19,7 @@ class NilaiController extends Controller
     public function index()
     {
         //get data from table nilai
-        $nilai = Nilai::latest()->get();
+        $nilai = Nilai::with('siswa')->latest()->get();
 
         //make response JSON
         return response()->json([
@@ -49,7 +50,7 @@ class NilaiController extends Controller
         //set validation
         $validator = Validator::make($request->all(), [
             'siswa_id'   => 'required',
-            'mapel_id' => 'required',
+            'nama_mapel' => 'required',
             'nilai' => 'required',
         ]);
 
@@ -61,7 +62,7 @@ class NilaiController extends Controller
         //save to database
         $nilai = Nilai::create([
             'siswa_id'     => $request->siswa_id,
-            'mapel_id'   => $request->mapel_id,
+            'nama_mapel'   => $request->nama_mapel,
             'nilai'   => $request->nilai
         ]);
 
@@ -89,12 +90,12 @@ class NilaiController extends Controller
     public function show($id)
     {
         //find nilai by ID
-        $nilai = Nilai::findOrfail($id);
+        $nilai = Nilai::with('siswa')->where('siswa_id',$id)->get();
 
         //make response JSON
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Nilai',
+            'message' => 'Data Nilai',
             'data'    => $nilai
         ], 200);
     }
@@ -180,5 +181,29 @@ class NilaiController extends Controller
                 'message' => "Failed " . $e->errorInfo
             ]);
         }
+    }
+
+    public function getSiswa($id){
+
+        $nilai = Nilai::findOrfail($id);
+        
+        $nilai = Nilai::with('siswa','mapel')->where('siswa_id',$id)->get();
+
+        return response()->json([
+            'success' => 'true',
+            'message' => 'data berhasil',
+            'data_siswa' => $nilai
+        ], 200);
+    }
+    public function getSiswaAll(){
+        //get data from table nilai
+        $nilai = Nilai::with('siswa','mapel')->latest()->get();
+
+        //make response JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'List Data Nilai',
+            'data'    => $nilai
+        ], 200);
     }
 }

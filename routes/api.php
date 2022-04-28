@@ -59,10 +59,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::resource('/jurusan', JurusanController::class);
 Route::resource('/kelas', KelasController::class);
 Route::resource('/mapel', MapelController::class);
+
 Route::resource('/siswa', SiswaController::class);
+Route::get('/getkelas/{id}', [SiswaController::class, 'getKelasbySiswa']);
+
 Route::resource('/guru', GuruController::class);
 Route::resource('/ujian', UjianController::class);
+
 Route::resource('/soal', SoalController::class);
+Route::get('/getsoal/{id}', [SoalController::class, 'getSoalByUjian']);
+
 Route::resource('/nilai', NilaiController::class);
+Route::get('/datasiswa/{id}',[NilaiController::class,'getSiswa']);
+Route::get('/datasiswa',[NilaiController::class,'getSiswaAll']);
+
 Route::resource('/admin', AdminController::class);
 Route::resource('/soal', SoalController::class);

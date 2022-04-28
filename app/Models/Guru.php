@@ -10,6 +10,10 @@ class Guru extends Model
     use HasFactory;
     protected $table = 'guru';
     protected $primaryKey = 'id_guru';
-    protected $fillable = ['nama_guru', 'user_id','alamat_guru','notelp_guru'];
+    protected $fillable = ['nama_guru', 'user_id','alamat_guru','notelp_guru','email_guru'];
+
+    public function mapel(){
+        return $this->hasMany(Mapel::class);
+    }
 
 }

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guru;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -49,22 +52,34 @@ class GuruController extends Controller
         //set validation
         $validator = Validator::make($request->all(), [
             'nama_guru'   => 'required',
-            'user_id' => 'required',
             'alamat_guru' => 'required',
-            'notelp_guru' => 'required'            
+            'email_guru' => 'required|email',
+            'notelp_guru' => 'required|numeric'
         ]);
 
         //response error validation
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), 422);
         }
+        
+        $user = User::create([
+            "role" => "Guru",
+            "name" => $request->nama_guru,
+            "email" => $request->email_guru,
+            "password" => Hash::make("password"),
+        ]);
+
+        $userID = DB::getPdo()->lastInsertId();
+
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         //save to database
         $ujian = Guru::create([
+            'user_id' => $userID,
             'nama_guru'     => $request->nama_guru,
-            'user_id'   => $request->user_id,
             'alamat_guru'   => $request->alamat_guru,
-            'notelp_guru'   => $request->notelp_guru
+            'notelp_guru'   => $request->notelp_guru,
+            'email_guru' => $request->email_guru,
         ]);
 
         if ($ujian) {
@@ -119,14 +134,14 @@ class GuruController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Guru $guru)
+    public function update(Request $request, $id)
     {
         //set validation
         $validator = Validator::make($request->all(), [
             'nama_guru'   => 'required',
-            'user_id' => 'required',
             'alamat_guru' => 'required',
-            'notelp_guru' => 'required'
+            'notelp_guru' => 'required',
+            'email_guru' => 'required'
         ]);
 
         //response error validation
@@ -135,23 +150,21 @@ class GuruController extends Controller
         }
 
         //find guru by ID
-        $guru = Guru::findOrFail($guru->id);
+        $guru = Guru::findOrFail($id);
 
-        if ($guru) {
+        try {
+            $guru->update($request->all());
+            $response = [
+                'message' => 'Guru Updated',
+                'data' => $guru
+            ];
 
-            // Update Ujian
-            $guru->update([
-                'nama_guru'     => $request->nama_guru,
-                'user_id'       => $request->user_id,
-                'alamat_guru'   => $request->alamat_guru,
-                'notelp_guru'   => $request->notelp_guru
-            ]);
+            return response()->json($response, Response::HTTP_OK);
+        } catch (QueryException $e) {
 
             return response()->json([
-                'success' => true,
-                'message' => 'guru Updated',
-                'data'    => $guru
-            ], 200);
+                'message' => "Failed " . $e->errorInfo
+            ]);
         }
 
         //data guru not found
@@ -171,12 +184,16 @@ class GuruController extends Controller
      */
     public function destroy($id)
     {
+        // Find data Guru
         $guru = Guru::findOrFail($id);
-
+        
         try {
             $guru->delete();
+            // Find data Guru in users Table & Delete by Id
+            $user = User::Where('id', $guru->user_id)->delete();
+            //response success
             $response = [
-                'message' => 'Nilai Deleted'
+                'message' => 'Guru Deleted'
             ];
 
             return response()->json($response, Response::HTTP_OK);

@@ -12,4 +12,11 @@ class Mapel extends Model
     protected $primaryKey = 'id_mapel';
     protected $fillable = ['nama_mapel', 'guru_id'];
 
+    public function guru(){
+        return $this->belongsTo(Guru::class,'guru_id','id_guru');
+    }
+    public function ujian()
+    {
+        return $this->hasMany(Ujian::class);
+    }
 }

@@ -10,6 +10,10 @@ class Nilai extends Model
     use HasFactory;
     protected $table = 'nilai';
     protected $primaryKey = 'id_nilai';
-    protected $fillable = ['siswa_id','mapel_id','nilai'];
-    
+    protected $fillable = ['siswa_id','nama_mapel','nilai'];
+
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class, 'siswa_id', 'id_siswa');
+    }
 }
