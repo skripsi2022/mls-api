@@ -10,4 +10,4 @@ Bismillah Lancar hehe :)
 
 ## Running This Project
 ```
-npm run serve
+php artisan serve
