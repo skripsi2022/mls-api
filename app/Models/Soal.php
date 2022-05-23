@@ -16,4 +16,7 @@ class Soal extends Model
     {
         return $this->belongsTo(Ujian::class, 'ujian_id', 'id_ujian');
     }
+    public function jawaban(){
+        return $this->hasMany(Jawaban::class);
+    }
 }

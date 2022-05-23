@@ -143,7 +143,7 @@ class SoalController extends Controller
             return response()->json($validator->errors(), 401);
         }
 
-        //find ujian by ID
+        //find soal by ID
         $soal = Soal::findOrFail($id);
 
         if ($soal) {
@@ -210,4 +210,5 @@ class SoalController extends Controller
             'data'    => $soal
         ], 200);
     }
+    
 }

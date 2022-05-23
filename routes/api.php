@@ -4,6 +4,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\JawabanController;
 use App\Http\Controllers\JurusanController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
@@ -75,3 +76,5 @@ Route::get('/datasiswa',[NilaiController::class,'getSiswaAll']);
 
 Route::resource('/admin', AdminController::class);
 Route::resource('/soal', SoalController::class);
+
+Route::resource('/jawaban',JawabanController::class);
