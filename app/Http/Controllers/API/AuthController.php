@@ -63,7 +63,7 @@ class AuthController extends Controller
             //     'success'   => false,
             //     'message' => ['These credentials do not match our records.']
             // ], 401);
-            return response()->json(['message' => 'Salah njeng !!!.'], 401);
+            return response()->json(['message' => 'Salah pak :( !!!.'], 401);
         }
 
         $token = $user->createToken('ApiToken')->plainTextToken;
@@ -74,7 +74,7 @@ class AuthController extends Controller
             'token'     => $token
         ];
 
-        return response($response, 201);
+        return response($response, 200);
     }
 
     // method for user logout and delete token

@@ -140,7 +140,7 @@ class SoalController extends Controller
 
         //response error validation
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), 401);
         }
 
         //find ujian by ID
