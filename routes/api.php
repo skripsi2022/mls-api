@@ -12,6 +12,7 @@ use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\SoalController;
 use App\Http\Controllers\UjianController;
+use App\Models\Nilai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -59,18 +60,28 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('/jurusan', JurusanController::class);
 Route::resource('/kelas', KelasController::class);
+
 Route::resource('/mapel', MapelController::class);
+Route::get('/mapelGuru', [MapelController::class, 'getMapelGuru']);
 
 Route::resource('/siswa', SiswaController::class);
 Route::get('/getkelas/{id}', [SiswaController::class, 'getKelasbySiswa']);
+Route::get('/getSiswa', [SiswaController::class, 'getSiswaByID']);
+
 
 Route::resource('/guru', GuruController::class);
+
 Route::resource('/ujian', UjianController::class);
+Route::get('/getUjianSiswa', [UjianController::class, 'getUjianSiswa']);
 
 Route::resource('/soal', SoalController::class);
 Route::get('/getsoal/{id}', [SoalController::class, 'getSoalByUjian']);
 
 Route::resource('/nilai', NilaiController::class);
+Route::get('/nilaiSiswa/{id}',[NilaiController::class,'getNilaibySiswa']);
+Route::get('/getNilaiSiswa',[NilaiController::class, 'getNilaiSiswa']);
+Route::get('/addNilai',[NilaiController::class, 'addNilai']);
+
 Route::get('/datasiswa/{id}',[NilaiController::class,'getSiswa']);
 Route::get('/datasiswa',[NilaiController::class,'getSiswaAll']);
 

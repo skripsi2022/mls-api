@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guru;
 use App\Models\Mapel;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -174,5 +175,24 @@ class MapelController extends Controller
                 'message' => "Failed " . $e->errorInfo
             ]);
         }
+    }
+    // get mapel by guru id 
+    public function getMapelGuru(Request $request)
+    {
+        // find guru by ID user
+        $guru = Guru::where([
+            ['user_id','=', $request->id]
+        ])->first();
+
+        $mapel = Mapel::where([
+            ['guru_id', '=', $guru->id_guru]
+        ])->get();
+
+        //make response JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Data mapel',
+            'data'    => $mapel
+        ], 200);
     }
 }

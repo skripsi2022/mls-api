@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Jawaban;
 use App\Models\Nilai;
 use App\Models\Siswa;
+use App\Models\Soal;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -183,11 +185,12 @@ class NilaiController extends Controller
         }
     }
 
+    // Get Detail Nilai by Siswa
     public function getSiswa($id){
 
         $nilai = Nilai::findOrfail($id);
         
-        $nilai = Nilai::with('siswa','mapel')->where('siswa_id',$id)->get();
+        $nilai = Nilai::with('siswa')->where('siswa_id',$id)->get();
 
         return response()->json([
             'success' => 'true',
@@ -195,14 +198,67 @@ class NilaiController extends Controller
             'data_siswa' => $nilai
         ], 200);
     }
+
+    // Get All Data Nilai with Relation
     public function getSiswaAll(){
+
         //get data from table nilai
-        $nilai = Nilai::with('siswa','mapel')->latest()->get();
+        $nilai = Nilai::with('siswa')->latest()->get();
 
         //make response JSON
         return response()->json([
             'success' => true,
             'message' => 'List Data Nilai',
+            'data'    => $nilai
+        ], 200);
+    }
+
+    // Add Nilai by Jawaban Siswa
+    public function addNilai(Request $request){
+
+        // get data jawaban benar by id siswa
+        $jawaban = Jawaban::where([
+            ['siswa_id','=', $request->siswa_id],
+            ['ujian_id','=', $request->ujian_id],
+            ['ket_jawaban','=','benar']
+        ])->count();
+
+        //get all data soal by id soal
+        $soal = Soal::where([
+            ['id_soal','=',$request->soal_id]
+        ])->count();
+        
+        //hitung total nilai by jawaban benar
+        $totalNilai = $jawaban * 25;
+        
+        // $nilai = Nilai::create([
+        //     'siswa_id'     => $request->siswa_id,
+        //     'nama_mapel'   => $request->nama_mapel,
+        //     'nilai'   => $totalNilai    
+        // ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Nilai Masuk',
+            'total nilai' => $totalNilai
+        ], 201);
+
+    }
+
+    // Get Nilai by Siswa 
+    public function getNilaiSiswa(Request $request){
+
+        // find siswa by ID user
+        $siswa = Siswa::where([
+            ['user_id', '=', $request->id]
+        ])->first();
+
+        // find nilai by id siswa
+        $nilai = Nilai::where('siswa_id',$siswa->id_siswa)->get();
+
+        //make response JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Nilai Siswa',
             'data'    => $nilai
         ], 200);
     }

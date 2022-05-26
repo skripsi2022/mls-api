@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Siswa;
 use App\Models\Ujian;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -179,5 +180,25 @@ class UjianController extends Controller
                 'message' => "Failed " . $e->errorInfo
             ]);
         }
+    }
+
+    // get Ujian by Siswa id 
+    public function getUjianSiswa(Request $request)
+    {
+        // find siswa by ID user
+        $siswa = Siswa::where([
+            ['user_id', '=', $request->id]
+        ])->first();
+
+        $ujian = Ujian::where([
+            ['kelas_id', '=', $siswa->kelas_id]
+        ])->get();
+
+        //make response JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Ujian mu',
+            'data ujian'    => $ujian,
+        ], 200);
     }
 }

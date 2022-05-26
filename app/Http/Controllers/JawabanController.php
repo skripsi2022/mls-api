@@ -39,7 +39,8 @@ class JawabanController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'soal_id' => 'required',
-            'user_id' => 'required',
+            'ujian_id' => 'required',
+            'siswa_id' => 'required',
             'isi_jawaban' => 'required',
         ]);
 
@@ -55,13 +56,14 @@ class JawabanController extends Controller
 
         if($cekJawaban){
             // Save Jawaban ke Database
-            // $jawaban = Jawaban::create([
-            //     'user_id' => $request->user_id,
-            //     'soal_id' => $request->soal_id,
-            //     'isi_soal' => $request->isi_soal,
-            //     'isi_jawaban' => $request->isi_jawaban,
-            //     'ket_jawaban' => "benar"
-            // ]);
+            $jawaban = Jawaban::create([
+                'siswa_id' => $request->siswa_id,
+                'ujian_id' => $request->ujian_id,
+                'soal_id' => $request->soal_id,
+                'isi_soal' => $request->isi_soal,
+                'isi_jawaban' => $request->isi_jawaban,
+                'ket_jawaban' => "benar"
+            ]);
             return response()->json([
                 'success' => true,
                 'message' => 'Jawaban Benar',
@@ -69,13 +71,14 @@ class JawabanController extends Controller
             ], 201);
         }else{
             // Save Jawaban ke Database
-            // $jawaban = Jawaban::create([
-            //     'user_id' => $request->user_id,
-            //     'soal_id' => $request->soal_id,
-            //     'isi_soal' => $request->isi_soal,
-            //     'isi_jawaban' => $request->isi_jawaban,
-            //     'ket_jawaban' => "salah"
-            // ]);
+            $jawaban = Jawaban::create([
+                'siswa_id' => $request->siswa_id,
+                'ujian_id' => $request->ujian_id,
+                'soal_id' => $request->soal_id,
+                'isi_soal' => $request->isi_soal,
+                'isi_jawaban' => $request->isi_jawaban,
+                'ket_jawaban' => "salah"
+            ]);
             return response()->json([
                 'success' => true,
                 'message' => 'Jawaban Salah',
@@ -116,7 +119,65 @@ class JawabanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //Validasi 
+        $validator = Validator::make($request->all(), [
+            'soal_id' => 'required',
+            'siswa_id' => 'required',
+            'ujian_id' => 'required',
+            'isi_jawaban' => 'required',
+        ]);
+        //response error validation
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        // Cari Jawaban by ID
+        $jawaban = Jawaban::findOrFail($id);
+
+        if($jawaban){
+            // Cek Jawaban  Sebelum Update Ke Database
+            $cekJawaban = Soal::where([
+                ['id_soal', '=', $request->soal_id],
+                ['opsi_benar', '=', $request->isi_jawaban]
+            ])->first();
+            // Update Jawaban
+            if($cekJawaban){
+                $jawaban->update([
+                'siswa_id' => $request->siswa_id,
+                'soal_id' => $request->soal_id,
+                'ujian_id' => $request->ujian_id,
+                'isi_soal' => $request->isi_soal,
+                'isi_jawaban' => $request->isi_jawaban,
+                'ket_jawaban' => "benar"
+                ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Jawaban Benar',
+                    'data'    => $cekJawaban
+                ], 201);
+            }else{
+                $jawaban->update([
+                    'siswa_id' => $request->siswa_id,
+                    'soal_id' => $request->soal_id,
+                    'ujian_id' => $request->ujian_id,
+                    'isi_soal' => $request->isi_soal,
+                    'isi_jawaban' => $request->isi_jawaban,
+                    'ket_jawaban' => "salah"
+                ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Jawaban Salah',
+                    'data'    => $cekJawaban
+                ], 201);
+            }
+        }
+
+        //data jawaban not found
+        return response()->json([
+            'success' => false,
+            'message' => 'Jawaban Tidak Ada',
+        ], 404);
+
     }
 
     /**

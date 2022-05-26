@@ -20,4 +20,8 @@ class Siswa extends Model
     {
         return $this->hasMany(Nilai::class,'siswa_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -11,7 +11,7 @@ class Jawaban extends Model
 
     protected $table = 'jawaban';
     protected $primaryKey = 'id_jawaban';
-    protected $fillable = ['soal_id','user_id', 'isi_jawaban', 'ket_jawaban'];
+    protected $fillable = ['soal_id','siswa_id','ujian_id','isi_jawaban', 'ket_jawaban'];
 
     public function soal()
     {

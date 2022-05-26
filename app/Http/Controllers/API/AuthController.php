@@ -69,8 +69,9 @@ class AuthController extends Controller
         $token = $user->createToken('ApiToken')->plainTextToken;
 
         $response = [
-            'success'   => true,
+            'success'   => true,    
             'user'      => $user,
+            'role'      => $user->role,
             'token'     => $token
         ];
 
