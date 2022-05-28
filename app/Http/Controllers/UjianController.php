@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guru;
+use App\Models\Mapel;
 use App\Models\Siswa;
 use App\Models\Ujian;
 use Illuminate\Database\QueryException;
@@ -192,6 +194,30 @@ class UjianController extends Controller
 
         $ujian = Ujian::where([
             ['kelas_id', '=', $siswa->kelas_id]
+        ])->get();
+
+        //make response JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Ujian mu',
+            'data ujian'    => $ujian,
+        ], 200);
+    }
+
+    // get Ujian by Guru Id
+    public function getUjianGuru(Request $request)
+    {
+        // find guru by ID user
+        $guru = Guru::where([
+            ['user_id', '=', $request->id]
+        ])->first();
+        //find mapel by id Guru
+        $mapel = Mapel::where([
+            ['guru_id','=',$guru->id_guru]
+        ])->first();
+        //find ujian by id mapel
+        $ujian = Ujian::with('kelas','mapel')->where([
+            ['mapel_id', '=', $mapel->id_mapel]
         ])->get();
 
         //make response JSON

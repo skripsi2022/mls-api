@@ -73,6 +73,7 @@ Route::resource('/guru', GuruController::class);
 
 Route::resource('/ujian', UjianController::class);
 Route::get('/getUjianSiswa', [UjianController::class, 'getUjianSiswa']);
+Route::get('/getUjianGuru', [UjianController::class, 'getUjianGuru']);
 
 Route::resource('/soal', SoalController::class);
 Route::get('/getsoal/{id}', [SoalController::class, 'getSoalByUjian']);

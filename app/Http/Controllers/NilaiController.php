@@ -215,21 +215,24 @@ class NilaiController extends Controller
 
     // Add Nilai by Jawaban Siswa
     public function addNilai(Request $request){
-
+        // get siswa id by user id
+        $siswa = Siswa::where([
+            ['user_id','=',$request->id]
+        ])->first();
         // get data jawaban benar by id siswa
         $jawaban = Jawaban::where([
-            ['siswa_id','=', $request->siswa_id],
+            ['siswa_id','=', $siswa->id_siswa],
             ['ujian_id','=', $request->ujian_id],
             ['ket_jawaban','=','benar']
         ])->count();
 
         //get all data soal by id soal
         $soal = Soal::where([
-            ['id_soal','=',$request->soal_id]
+            ['ujian_id','=',$request->ujian_id]
         ])->count();
         
         //hitung total nilai by jawaban benar
-        $totalNilai = $jawaban * 25;
+        $totalNilai = $jawaban / $soal * 100;
         
         // $nilai = Nilai::create([
         //     'siswa_id'     => $request->siswa_id,
