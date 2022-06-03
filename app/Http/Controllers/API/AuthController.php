@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'role' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8'
+            'password' => 'required|string|'
         ]);
 
         if ($validator->fails()) {
@@ -59,20 +60,27 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            // return response([
-            //     'success'   => false,
-            //     'message' => ['These credentials do not match our records.']
-            // ], 401);
-            return response()->json(['message' => 'Salah pak :( !!!.'], 401);
+            return response([
+                'success'   => false,
+                'message' => 'These credentials do not match our records.',
+                'status' => 500
+            ], 401);
+            // return response()->json(['message' => 'Salah pak :( !!!.'], 401);
         }
+        // find siswa by ID user
+        $siswa = Siswa::with('kelas')->where([
+            ['user_id', '=', $user->id]
+        ])->first();
 
         $token = $user->createToken('ApiToken')->plainTextToken;
-
+        
         $response = [
             'success'   => true,    
             'user'      => $user,
+            'siswa'     => $siswa,
             'role'      => $user->role,
-            'token'     => $token
+            'token'     => $token,
+            'status'     => 200,
         ];
 
         return response($response, 200);

@@ -6,6 +6,7 @@ use App\Models\Jawaban;
 use App\Models\Nilai;
 use App\Models\Siswa;
 use App\Models\Soal;
+use App\Models\Ujian;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,7 +22,7 @@ class NilaiController extends Controller
     public function index()
     {
         //get data from table nilai
-        $nilai = Nilai::with('siswa')->latest()->get();
+        $nilai = Nilai::with('siswa','ujian')->latest()->get();
 
         //make response JSON
         return response()->json([
@@ -217,8 +218,9 @@ class NilaiController extends Controller
     public function addNilai(Request $request){
         // get siswa id by user id
         $siswa = Siswa::where([
-            ['user_id','=',$request->id]
+            ['user_id','=',$request->siswa_id]
         ])->first();
+
         // get data jawaban benar by id siswa
         $jawaban = Jawaban::where([
             ['siswa_id','=', $siswa->id_siswa],
@@ -234,15 +236,17 @@ class NilaiController extends Controller
         //hitung total nilai by jawaban benar
         $totalNilai = $jawaban / $soal * 100;
         
-        // $nilai = Nilai::create([
-        //     'siswa_id'     => $request->siswa_id,
-        //     'nama_mapel'   => $request->nama_mapel,
-        //     'nilai'   => $totalNilai    
-        // ]);
+        $nilaiAkhir = round($totalNilai);
+        
+        $nilai = Nilai::create([
+            'siswa_id'     => $siswa->id_siswa,
+            'ujian_id'   => $request->ujian_id,
+            'nilai'   => $nilaiAkhir    
+        ]);
         return response()->json([
             'success' => true,
             'message' => 'Nilai Masuk',
-            'total nilai' => $totalNilai
+            'total nilai' => $nilaiAkhir
         ], 201);
 
     }
@@ -254,7 +258,7 @@ class NilaiController extends Controller
         $siswa = Siswa::where([
             ['user_id', '=', $request->id]
         ])->first();
-
+        
         // find nilai by id siswa
         $nilai = Nilai::where('siswa_id',$siswa->id_siswa)->get();
 

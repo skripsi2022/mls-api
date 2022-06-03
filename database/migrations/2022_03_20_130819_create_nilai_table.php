@@ -16,12 +16,12 @@ class CreateNilaiTable extends Migration
         Schema::create('nilai', function (Blueprint $table) {
             $table->increments('id_nilai');
             $table->integer('siswa_id')->unsigned();
-            $table->integer('mapel_id')->unsigned();
+            $table->integer('ujian_id')->unsigned();
             $table->string('nilai');
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
             $table->foreign('siswa_id')->references('id_siswa')->on('siswa');
-            $table->foreign('mapel_id')->references('id_mapel')->on('mapel');
+            $table->foreign('ujian_id')->references('id_ujian')->on('ujian');
         });
     }
 

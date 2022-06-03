@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use PDO;
 
 class Ujian extends Model
 {
@@ -23,5 +24,8 @@ class Ujian extends Model
     public function soal()
     {
         return $this->hasMany(Soal::class);
+    }
+    public function nilai(){
+        return $this->hasMany(Nilai::class);
     }
 }

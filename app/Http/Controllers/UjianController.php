@@ -192,7 +192,7 @@ class UjianController extends Controller
             ['user_id', '=', $request->id]
         ])->first();
 
-        $ujian = Ujian::where([
+        $ujian = Ujian::with('mapel','kelas')->where([
             ['kelas_id', '=', $siswa->kelas_id]
         ])->get();
 

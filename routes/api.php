@@ -76,7 +76,8 @@ Route::get('/getUjianSiswa', [UjianController::class, 'getUjianSiswa']);
 Route::get('/getUjianGuru', [UjianController::class, 'getUjianGuru']);
 
 Route::resource('/soal', SoalController::class);
-Route::get('/getsoal/{id}', [SoalController::class, 'getSoalByUjian']);
+Route::get('/getSoalByUjian/{id}', [SoalController::class, 'getSoalByUjian']);
+Route::get('/getSoalById/{id}', [SoalController::class, 'getSoalById']);
 
 Route::resource('/nilai', NilaiController::class);
 Route::get('/nilaiSiswa/{id}',[NilaiController::class,'getNilaibySiswa']);
@@ -90,3 +91,4 @@ Route::resource('/admin', AdminController::class);
 Route::resource('/soal', SoalController::class);
 
 Route::resource('/jawaban',JawabanController::class);
+Route::get('/cekJawaban', [JawabanController::class, 'cekJawaban']);
