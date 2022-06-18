@@ -195,4 +195,23 @@ class MapelController extends Controller
             'data'    => $mapel
         ], 200);
     }
+
+    public function addMapelGuru(Request $request){
+        // find guru by ID user
+        $guru = Guru::where([
+            ['user_id', '=', $request->id]
+        ])->first();
+       
+        //save to database
+        $mapel = Mapel::create([
+            'nama_mapel'    => $request->nama_mapel,
+            'guru_id'   => $guru->id_guru
+        ]);
+        //success save to database
+        return response()->json([
+            'success' => true,
+            'message' => 'Mapel success to add',
+            'data' => $mapel
+        ], 200);
+    }
 }

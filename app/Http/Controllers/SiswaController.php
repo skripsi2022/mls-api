@@ -244,17 +244,17 @@ class SiswaController extends Controller
 
     // Get Siswa By ID User
     public function getSiswaByID(Request $request){
-        // find siswa by ID user
-        $siswa = Siswa::with('kelas')->where([
-            ['user_id','=', $request->user_id]
-        ])->first();
-        
-        //make response JSON
-        return response()->json([
-            'success' => true,
-            'message' => 'Data siswa',
-            'data'    => $siswa
-        ], 200);
+    // find siswa by ID user
+    $siswa = Siswa::with('kelas')->where([
+        ['user_id','=', $request->user_id]
+    ])->first();
+    
+    //make response JSON
+    return response()->json([
+        'success' => true,
+        'message' => 'Data siswa',
+        'data'    => $siswa
+    ], 200);
 
     }
 }

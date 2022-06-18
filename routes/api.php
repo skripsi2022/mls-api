@@ -63,6 +63,7 @@ Route::resource('/kelas', KelasController::class);
 
 Route::resource('/mapel', MapelController::class);
 Route::get('/mapelGuru', [MapelController::class, 'getMapelGuru']);
+Route::post('/addMapelGuru', [MapelController::class, 'addMapelGuru']);
 
 Route::resource('/siswa', SiswaController::class);
 Route::get('/getkelas/{id}', [SiswaController::class, 'getKelasbySiswa']);

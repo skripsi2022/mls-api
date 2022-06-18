@@ -18,9 +18,11 @@ class CreateUjianTable extends Migration
             $table->string('nama_ujian');
             $table->integer('mapel_id')->unsigned();
             $table->integer('kelas_id')->unsigned();
+            $table->integer('guru_id')->unsigned();
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
             $table->foreign('mapel_id')->references('id_mapel')->on('mapel');
+            $table->foreign('guru_id')->references('id_guru')->on('guru');
             $table->foreign('kelas_id')->references('id_kelas')->on('kelas');
         });
     }

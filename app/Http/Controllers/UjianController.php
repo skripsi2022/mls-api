@@ -61,10 +61,15 @@ class UjianController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
+        $mapel = Mapel::where([
+            ['id_mapel', '=', $request->mapel_id]
+        ])->first();
+
         //save to database
         $ujian = Ujian::create([
             'mapel_id'     => $request->mapel_id,
             'kelas_id'   => $request->kelas_id,
+            'guru_id'   => $mapel->guru_id,
             'nama_ujian'   => $request->nama_ujian
         ]);
 
@@ -211,20 +216,17 @@ class UjianController extends Controller
         $guru = Guru::where([
             ['user_id', '=', $request->id]
         ])->first();
-        //find mapel by id Guru
-        $mapel = Mapel::where([
-            ['guru_id','=',$guru->id_guru]
-        ])->first();
+       
         //find ujian by id mapel
         $ujian = Ujian::with('kelas','mapel')->where([
-            ['mapel_id', '=', $mapel->id_mapel]
+            ['guru_id', '=', $guru->id_guru]
         ])->get();
 
         //make response JSON
         return response()->json([
             'success' => true,
             'message' => 'Data Ujian mu',
-            'data ujian'    => $ujian,
+            'data'    => $ujian,
         ], 200);
     }
 }

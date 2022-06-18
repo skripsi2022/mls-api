@@ -11,11 +11,15 @@ class Ujian extends Model
     use HasFactory;
     protected $table = 'ujian';
     protected $primaryKey = 'id_ujian';
-    protected $fillable = ['mapel_id', 'kelas_id', 'nama_ujian'];
+    protected $fillable = ['mapel_id', 'kelas_id','guru_id' ,'nama_ujian'];
 
     public function mapel()
     {
         return $this->belongsTo(Mapel::class, 'mapel_id', 'id_mapel');
+    }
+    public function guru()
+    {
+        return $this->belongsTo(Mapel::class, 'guru_id', 'guru_id');
     }
     public function kelas()
     {

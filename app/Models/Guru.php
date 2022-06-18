@@ -15,5 +15,8 @@ class Guru extends Model
     public function mapel(){
         return $this->hasMany(Mapel::class);
     }
+    public function ujian(){
+        return $this->hasMany(Ujian::class);
+    }
 
 }

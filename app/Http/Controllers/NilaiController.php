@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Guru;
 use App\Models\Jawaban;
+use App\Models\Mapel;
 use App\Models\Nilai;
 use App\Models\Siswa;
 use App\Models\Soal;
@@ -23,12 +25,15 @@ class NilaiController extends Controller
     {
         //get data from table nilai
         $nilai = Nilai::with('siswa','ujian')->latest()->get();
+        // count data nilai
+        $total = Nilai::count();
 
         //make response JSON
         return response()->json([
             'success' => true,
             'message' => 'List Data Nilai',
-            'data'    => $nilai
+            'data'  => $nilai,
+            'total_nilai'    => $total,
         ], 200);
     }
 
@@ -267,6 +272,27 @@ class NilaiController extends Controller
             'success' => true,
             'message' => 'Nilai Siswa',
             'data'    => $nilai
+        ], 200);
+    }
+
+    //Get Nilai by Guru / Mapel
+    public function getNilaiMapel(Request $request){
+
+        //find mapel by id guru 
+        $mapel = Mapel::where([
+            ['id_mapel','=', $request->id_mapel]
+        ])->first();
+
+        // find nilai by mapel_id
+        $nilai = Nilai::where([
+            ['ujian_id','=',$mapel]
+        ]);
+
+        //make response JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Nilai Siswa by Mapel',
+            'data'    => $mapel
         ], 200);
     }
 }
