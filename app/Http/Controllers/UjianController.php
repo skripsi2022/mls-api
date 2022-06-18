@@ -21,7 +21,7 @@ class UjianController extends Controller
     public function index()
     {
         //get data from table ujian
-        $ujian = Ujian::with('kelas','mapel')->latest()->get();
+        $ujian = Ujian::with('kelas', 'mapel')->latest()->get();
 
         //make response JSON
         return response()->json([
@@ -73,7 +73,7 @@ class UjianController extends Controller
             'nama_ujian'   => $request->nama_ujian
         ]);
 
-        if($ujian) {
+        if ($ujian) {
             return response()->json([
                 'success' => true,
                 'message' => 'Kelas Created',
@@ -142,7 +142,7 @@ class UjianController extends Controller
         //find ujian by ID
         $ujian = Ujian::findOrFail($id);
 
-        if($ujian){
+        if ($ujian) {
             // Update Ujian
             $ujian->update([
                 'mapel_id'     => $request->mapel_id,
@@ -197,7 +197,7 @@ class UjianController extends Controller
             ['user_id', '=', $request->id]
         ])->first();
 
-        $ujian = Ujian::with('mapel','kelas')->where([
+        $ujian = Ujian::with('mapel', 'kelas')->where([
             ['kelas_id', '=', $siswa->kelas_id]
         ])->get();
 
@@ -216,9 +216,9 @@ class UjianController extends Controller
         $guru = Guru::where([
             ['user_id', '=', $request->id]
         ])->first();
-       
+
         //find ujian by id mapel
-        $ujian = Ujian::with('kelas','mapel')->where([
+        $ujian = Ujian::with('kelas', 'mapel')->where([
             ['guru_id', '=', $guru->id_guru]
         ])->get();
 

@@ -20,6 +20,7 @@ class CreateJawabanTable extends Migration
             $table->integer('siswa_id')->unsigned();
             $table->string('isi_jawaban');
             $table->string('ket_jawaban');
+            $table->string('opsi_jawaban');
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
             $table->foreign('soal_id')->references('id_soal')->on('soal');
