@@ -83,7 +83,7 @@ Route::get('/getSoalById/{id}', [SoalController::class, 'getSoalById']);
 Route::resource('/nilai', NilaiController::class);
 Route::get('/nilaiSiswa/{id}',[NilaiController::class,'getNilaibySiswa']);
 Route::get('/getNilaiSiswa',[NilaiController::class, 'getNilaiSiswa']);
-Route::get('/getNilaiGuru',[NilaiController::class, 'getNilaiGuru']);
+Route::get('/getNilaiUjian/{id}', [NilaiController::class, 'getNilaiUjian']);
 Route::get('/addNilai',[NilaiController::class, 'addNilai']);
 
 Route::get('/datasiswa/{id}',[NilaiController::class,'getSiswa']);

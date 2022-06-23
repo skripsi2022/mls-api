@@ -66,7 +66,7 @@ class SiswaController extends Controller
         $user = User::create([
             "role" => "Siswa",
             "name" => $request->nama_siswa,
-            "email" => $request->nis_siswa . "@student.mlscloud.id",
+            "email" => $request->nis_siswa . "@student.id",
             "password" => Hash::make($request->nis_siswa),
         ]);
 

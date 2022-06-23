@@ -97,7 +97,7 @@ class UjianController extends Controller
     public function show($id)
     {
         //find ujian by ID
-        $ujian = Ujian::findOrfail($id);
+        $ujian = Ujian::with('kelas', 'mapel')->findOrfail($id);
 
         //make response JSON
         return response()->json([
@@ -130,7 +130,7 @@ class UjianController extends Controller
         //set validation
         $validator = Validator::make($request->all(), [
             'mapel_id'   => 'required',
-            'kelas_id' => 'required',
+            // 'kelas_id' => 'required',
             'nama_ujian' => 'required',
         ]);
 
@@ -138,6 +138,10 @@ class UjianController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
+        //find guru ID
+        $mapel = Mapel::where([
+            ['id_mapel','=',$request->mapel_id]
+        ])->first();
 
         //find ujian by ID
         $ujian = Ujian::findOrFail($id);
@@ -146,7 +150,7 @@ class UjianController extends Controller
             // Update Ujian
             $ujian->update([
                 'mapel_id'     => $request->mapel_id,
-                'kelas_id'   => $request->kelas_id,
+                'guru_id'   => $mapel->guru_id,
                 'nama_ujian'   => $request->nama_ujian
             ]);
 

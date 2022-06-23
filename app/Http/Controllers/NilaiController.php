@@ -275,18 +275,14 @@ class NilaiController extends Controller
         ], 200);
     }
 
-    //Get Nilai by  Mapel
-    public function getNilaiMapel(Request $request){
+    //Get Nilai by Ujian
+    public function getNilaiUjian($id)
+    {
 
-        //find mapel by id guru 
-        $mapel = Mapel::where([
-            ['id_mapel','=', $request->id_mapel]
-        ])->first();
-
-        // find nilai by mapel_id
-        $nilai = Nilai::where([
-            ['ujian_id','=',$mapel]
-        ]);
+        // find nilai by ujian_id
+        $nilai = Nilai::with('siswa', 'ujian')->where([
+            ['ujian_id', '=', $id]
+        ])->get();
 
         //make response JSON
         return response()->json([
