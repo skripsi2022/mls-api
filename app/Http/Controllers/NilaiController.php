@@ -259,11 +259,11 @@ class NilaiController extends Controller
 
             try {
                 $jawaban->delete();
-                $response = [
-                    'message' => 'Jawaban Deleted'
-                ];
-
-                return response()->json($response, Response::HTTP_OK);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Nilai Masuk',
+                    'total nilai' => $nilaiAkhir
+                ], 201);
             } catch (QueryException $e) {
 
                 return response()->json([
