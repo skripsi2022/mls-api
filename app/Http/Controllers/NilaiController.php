@@ -24,7 +24,7 @@ class NilaiController extends Controller
     public function index()
     {
         //get data from table nilai
-        $nilai = Nilai::with('siswa','ujian')->latest()->get();
+        $nilai = Nilai::with('siswa','ujian')->orderBy('ujian_id')->get();
         // count data nilai
         $total = Nilai::count();
 
@@ -33,7 +33,7 @@ class NilaiController extends Controller
             'success' => true,
             'message' => 'List Data Nilai',
             'data'  => $nilai,
-            'total_nilai'    => $total,
+            'total_nilai' => $total,
         ], 200);
     }
 
@@ -221,6 +221,7 @@ class NilaiController extends Controller
 
     // Add Nilai by Jawaban Siswa
     public function addNilai(Request $request){
+
         // get siswa id by user id
         $siswa = Siswa::where([
             ['user_id','=',$request->siswa_id]
@@ -248,6 +249,34 @@ class NilaiController extends Controller
             'ujian_id'   => $request->ujian_id,
             'nilai'   => $nilaiAkhir    
         ]);
+
+        // hapus data jawaban
+        if($nilai){
+            $jawaban = Jawaban::where([
+                ['siswa_id', '=', $siswa->id_siswa],
+                ['ujian_id', '=', $request->ujian_id]
+            ]);
+
+            try {
+                $jawaban->delete();
+                $response = [
+                    'message' => 'Jawaban Deleted'
+                ];
+
+                return response()->json($response, Response::HTTP_OK);
+            } catch (QueryException $e) {
+
+                return response()->json([
+                    'message' => "Failed " . $e->errorInfo
+                ]);
+            }
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Jawaban gagal dihapus',
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Nilai Masuk',
@@ -317,4 +346,83 @@ class NilaiController extends Controller
             'data'    => $nilai
         ], 200);
     }
+
+    public function getNilai($id)
+    {
+        //find nilai by ID
+        $nilai = Nilai::with('siswa','ujian')->findOrfail($id);
+
+        //make response JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Nilai',
+            'data'    => $nilai
+        ], 200);
+    }
+
+    // updateNilai Methode PUT
+    public function updNilai(Request $request, $id){
+        //set validation
+        $validator = Validator::make($request->all(), [
+            'nilai' => 'required',
+        ]);
+
+        //response error validation
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        //find nilai by ID
+        $nilai = Nilai::findOrFail($id);
+
+        if ($nilai) {
+
+            // Update Ujian
+            $nilai->update([
+                'nilai'   => $request->nilai
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Nilai Updated',
+                'data'    => $nilai
+            ], 200);
+        }
+
+        //data nilai not found
+        return response()->json([
+            'success' => false,
+            'message' => 'Nilai Not Found',
+        ], 404);
+
+    }
+
+    // Cek Nilai by Siswa
+    public function cekNilai(Request $request){
+
+        // get siswa id by user id
+        $siswa = Siswa::where([
+            ['user_id', '=', $request->siswa_id]
+        ])->first();
+
+        $nilai = Nilai::where([
+            ['siswa_id','=',$siswa->id_siswa],
+            ['ujian_id','=', $request->ujian_id]
+        ])->first();
+
+        if($nilai){
+            return response()->json([
+                'success' => true,
+                'message' => 'Kamu Sudah Mengerjakan !',
+                'data'    => $nilai
+            ], 200);
+        }else{
+            return response()->json([
+                'success' => true,
+                'message' => 'Kamu Belum Mengerjakan !',
+                'data'    => $nilai
+            ], 200);
+        }
+    }
+
 }

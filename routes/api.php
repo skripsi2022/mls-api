@@ -82,9 +82,12 @@ Route::get('/getSoalById/{id}', [SoalController::class, 'getSoalById']);
 
 Route::resource('/nilai', NilaiController::class);
 Route::get('/nilaiSiswa/{id}',[NilaiController::class,'getNilaibySiswa']);
+Route::get('/getNilai/{id}',[NilaiController::class,'getNilai']);
 Route::get('/getNilaiSiswa',[NilaiController::class, 'getNilaiSiswa']);
 Route::get('/getNilaiUjian/{id}', [NilaiController::class, 'getNilaiUjian']);
 Route::get('/addNilai',[NilaiController::class, 'addNilai']);
+Route::put('/updNilai/{id}',[NilaiController::class, 'updNilai']);
+Route::get('/cekNilai',[NilaiController::class, 'cekNilai']);
 
 Route::get('/datasiswa/{id}',[NilaiController::class,'getSiswa']);
 Route::get('/datasiswa',[NilaiController::class,'getSiswaAll']);
