@@ -212,10 +212,7 @@ class SoalController extends Controller
                 'data'    => $soal
             ], 200);
         } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Data Soal Gaada !',
-            ], 404);
+            return response('',404);
         }
     }
 
