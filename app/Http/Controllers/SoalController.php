@@ -205,12 +205,20 @@ class SoalController extends Controller
         //find Soal by ID
         $soal = Soal::with('ujian')->where('ujian_id', $id)->get();
 
-        //make response JSON
-        return response()->json([
-            'success' => true,
-            'message' => 'Data siswa',
-            'data'    => $soal
-        ], 200);
+        if($soal){
+            //make response JSON
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Soal',
+                'data'    => $soal
+            ], 200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Soal',
+            ], 400);
+        }
+        
     }
 
     public function getSoalById($id){
