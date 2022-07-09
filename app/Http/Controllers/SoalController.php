@@ -172,7 +172,6 @@ class SoalController extends Controller
             'success' => false,
             'message' => 'soal Not Found',
         ], 404);
-    
     }
 
     /**
@@ -199,29 +198,29 @@ class SoalController extends Controller
             ]);
         }
     }
-    
-    public function getSoalByUjian($id){
+
+    public function getSoalByUjian($id)
+    {
 
         //find Soal by ID
         $soal = Soal::with('ujian')->where('ujian_id', $id)->get();
 
-        if($soal){
-            //make response JSON
+        if (!$soal->isEmpty()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Data Soal',
+                'message' => 'Data Soal Tersedia',
                 'data'    => $soal
             ], 200);
-        }else{
+        } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Data Soal',
-            ], 400);
+                'message' => 'Data Soal Gaada !',
+            ], 404);
         }
-        
     }
 
-    public function getSoalById($id){
+    public function getSoalById($id)
+    {
 
         //find Soal by ID
         $soal = Soal::with('ujian')->where('id_soal', $id)->get();
@@ -238,14 +237,13 @@ class SoalController extends Controller
     public function importSoal(Request $request)
     {
 
-        try{
-            Excel::import(new ImportSoal , $request->file('csv')->store('files'));
+        try {
+            Excel::import(new ImportSoal, $request->file('csv')->store('files'));
             //make response JSON
             return response()->json([
                 'success' => true,
                 'message' => 'Import Soal Success',
             ], 200);
-            
         } catch (QueryException $e) {
 
             return response()->json([
