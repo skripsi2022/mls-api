@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ImportSiswa;
+use App\Imports\ImportUser;
 use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\User;
@@ -10,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class SiswaController extends Controller
@@ -256,5 +259,28 @@ class SiswaController extends Controller
         'data'    => $siswa
     ], 200);
 
+    }
+
+    // Import Siswa From Excel
+    public function importSiswa(Request $request)
+    {
+
+        try {
+            // Import User 
+            Excel::import(new ImportUser, $request->file('csv')->store('files'));
+            // Import Siswa by User
+            Excel::import(new ImportSiswa, $request->file('csv')->store('files'));
+            //make response JSON
+            return response()->json([
+                'success' => true,
+                'message' => 'Import Siswa Success',
+            ], 200);
+        } catch (QueryException $e) {
+
+            return response()->json([
+                'message' => "Failed " . $e->errorInfo
+            ]);
+        }
+        // return ["result" => $request->csv];
     }
 }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ImportSoal;
 use App\Models\Soal;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class SoalController extends Controller
@@ -223,6 +225,25 @@ class SoalController extends Controller
             'data'    => $soal
         ], 200);
     }
-    
-    
+
+    // Import Soal From Excel
+    public function importSoal(Request $request)
+    {
+
+        try{
+            Excel::import(new ImportSoal , $request->file('csv')->store('files'));
+            //make response JSON
+            return response()->json([
+                'success' => true,
+                'message' => 'Import Soal Success',
+            ], 200);
+            
+        } catch (QueryException $e) {
+
+            return response()->json([
+                'message' => "Failed " . $e->errorInfo
+            ]);
+        }
+        // return ["result" => $request->csv];
+    }
 }
