@@ -222,12 +222,15 @@ class SoalController extends Controller
         //find Soal by ID
         $soal = Soal::with('ujian')->where('id_soal', $id)->get();
 
-        //make response JSON
-        return response()->json([
-            'success' => true,
-            'message' => 'Data siswa',
-            'data'    => $soal
-        ], 200);
+        if (!$soal->isEmpty()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Detail Soal Tersedia',
+                'data'    => $soal
+            ], 200);
+        } else {
+            return response('', 404);
+        }
     }
 
     // Import Soal From Excel
