@@ -79,7 +79,7 @@ Route::get('/nilaiSiswa/{id}',[NilaiController::class,'getNilaibySiswa'])->name(
 Route::get('/getNilai/{id}',[NilaiController::class,'getNilai'])->name('nilai.byid');
 Route::get('/getNilaiSiswa',[NilaiController::class, 'getNilaiSiswa'])->name('nilai.siswa');
 Route::get('/getNilaiUjian/{id}', [NilaiController::class, 'getNilaiUjian'])->name('nilai.ujian');
-Route::get('/addNilai',[NilaiController::class, 'addNilai'])->name('nilai.tambah');
+Route::post('/addNilai',[NilaiController::class, 'addNilai'])->name('nilai.tambah');
 Route::put('/updNilai/{id}',[NilaiController::class, 'updNilai'])->name('nilai.update');
 Route::get('/cekNilai',[NilaiController::class, 'cekNilai'])->name('nilai.cek');
 
