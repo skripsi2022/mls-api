@@ -229,7 +229,7 @@ class NilaiController extends Controller
 
         // get data jawaban benar by id siswa
         $jawaban = Jawaban::where([
-            ['siswa_id','=', $siswa->id_siswa],
+            ['user_id','=', $siswa->id_siswa],
             ['ujian_id','=', $request->ujian_id],
             ['ket_jawaban','=','benar']
         ])->count();
